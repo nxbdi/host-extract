@@ -1,0 +1,62 @@
+Host-Extract | Host/IP Pattern Extractor
+========================================
+
+This little ruby script tries to extract all IP/Host patterns in page response of a given URL and JavaScript/CSS files of that URL.
+
+It tries to detect internal IPs/Hostnames, development IPs/ports,  load balancers, additional attack entries related to your target that are revealed in html body and hidden in inline js, css, html comment areas.
+
+This is unlike web crawler which looks for new links only in anchor tags  (<a) or the like.
+
+In some cases, host-extract may give you false positives when there are some words like - main-site_ver_10.2.1.3.swf.
+
+With -v option, you can ask the tool to output html view-source snippets for each IP/Domain extracted. 
+This shortens your manual analysis time.
+
+
+Download/Update
+================
+
+svn co http://host-extract.googlecode.com/svn/trunk/ host-extract
+
+
+USAGE 
+======
+
+Usage: host-extract.rb [options]
+    -a                   find all ip/host patterns
+    -j                   scan all js files
+    -c                   scan all css files
+    -v                   append view-source html snippet for manual verification
+
+
+A sugguested usage is to feed lists of urls output by your favorite web crawler.
+
+In Win OSes, you can
+
+for  /F "tokens=*" %G IN ('type url-list') do ruby host-extract.rb -a -v %G
+In Linux platforms, you can
+
+for line in $(cat url-list); do ruby host-extract.rb -a -v $line; done
+
+The run.cmd and run.sh are included to be ready for use.
+
+Windows: run url-list
+
+Linux: sh run.sh url-list
+
+
+Tutorial Wiki
+==============
+
+Thanks to Sebastien Damaye from aldeid.com, you can see a thorough host-extract tutorial with real-world web sites that reveal various juicy info shown inside html/js sources. 
+
+http://aldeid.com/index.php/Host-extract
+
+
+Bugs/Suggestions Report
+========================
+
+Please report Bugs/Suggestions to host-extract at yehg.net. 
+Thanks for your contribution.
+
+
