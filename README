@@ -3,7 +3,7 @@ Host-Extract | Host/IP Pattern Extractor
 
 This little ruby script tries to extract all IP/Host patterns in page response of a given URL and JavaScript/CSS files of that URL.
 
-It tries to detect internal IPs/Hostnames, development IPs/ports, cdn, load balancers, additional attack entries related to your target that are revealed in inline js, css, html comment areas and js/css files.
+With it, you can quickly identify internal IPs/Hostnames, development IPs/ports, cdn, load balancers, additional attack entries related to your target that are revealed in inline js, css, html comment areas and js/css files.
 
 This is unlike web crawler which looks for new links only in anchor tags (<a) or the like. [you might miss many additional targets if you ever use such web crawler or other GUI-based tools that shows you your main target and its relationship with its linked sub/off-site domains]
 
