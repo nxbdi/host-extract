@@ -61,7 +61,7 @@ def snip_str(haystack,needle)
             sn = sn[0,60]
             sn.gsub!("\r\n","")
             sn.gsub!("\n","")
-            return "\n      #view-source: .. #{sn}\n"
+            return "\n      #source: .. #{sn}\n"
         end
     end
     return ''
