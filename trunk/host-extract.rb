@@ -559,7 +559,7 @@ def main
 
     
     
-    puts "\n\n# Send bugs & suggestions to host-extract @ yehg.net"
+    puts "\n# Send bugs & suggestions to host-extract @ yehg.net"
 
     
 end
