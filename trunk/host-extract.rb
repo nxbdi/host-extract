@@ -70,6 +70,13 @@ end
 
 def get_url(url,header_check=false)   
   begin    
+    
+    blacklist = url.to_s.scan(/jquery|yui\.|font\.js|mootools|googlesyndication|google\-analytics.com|addthis/)
+    
+    if blacklist.size > 0
+        return
+    end
+    
     if File.exist?$outfile
         fout = File.new($outfile,"a")
         fout.puts("\n#########################################################################\n\n")
@@ -88,6 +95,7 @@ def get_url(url,header_check=false)
     
     path = uri.path
     path = '/'  if uri.path == nil or uri.path == ""
+    path = path.gsub("//",'/')
     puts 'path: ' + path
     
     query = uri.query
@@ -136,8 +144,10 @@ def get_url(url,header_check=false)
       
       if header_check == true
           header_value = ''
-          req.each do |r|
+          if req.class.to_s == "Array"
+            req.each do |r|            
             header_value =  r + ': ' + req[r].to_s + "\n" + header_value
+            end
           end
           body = header_value
 
@@ -243,7 +253,7 @@ def get_url(url,header_check=false)
         puts
         puts '[*] searching for IP/domain patterns ...'
         fout.puts("\n# [*] searching for IP/domain patterns ...\n\n")
-        a1 = body.scan(/([a-zA-Z0-9]+([\-\.]{1}[a-zA-Z0-9]+)*\.((de|fr|co\.jp|jp|uk|co\.uk|es|cn|it|com|net|org|info)\.([a-zA-Z]{2,3}+)|de|fr|co\.jp|jp|uk|co\.uk|es|cn|it|com|net|org|info|arpa|localdomain|localhost)(:[0-9]{1,5})?(\/)?|[a-zA-Z]{4,}[0-9]{0,}:[0-9]{2,5}|((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?))|[a-zA-Z]{4,}[0-9]{0,}:[0-9]{2,5})/ixm)
+        a1 = body.scan(/([a-zA-Z0-9]+([\-\.]{1}[a-zA-Z0-9]+)*\.((au|de|fr|co\.jp|jp|uk|co\.uk|es|cn|it|com|net|org|info)\.([a-zA-Z]{2,3}+)|de|fr|co\.jp|jp|uk|co\.uk|es|cn|it|com|net|org|info|arpa|localdomain|localhost)(:[0-9]{1,5})?(\/)?|[a-zA-Z]{4,}[0-9]{0,}:[0-9]{2,5}|((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?))|[a-zA-Z]{4,}[0-9]{0,}:[0-9]{2,5})/ixm)
         r1 = []
         
         if a1.size == 0
@@ -265,7 +275,7 @@ def get_url(url,header_check=false)
         r1.each do |r|            
             # common false positives 
 
-            unless r =~ /(wdith:|wieght:|hieght:|heeight:|remove:|timespan:|rank:|position:|top:|mapentry:|left:|bottom:|right:|padding:|margin:|index:|size:|version:|ver:|w3\.org|www\.adobe\.com|download\.macromedia\.com|char|span\.|delay:|open:|close:|rate:|out:|post(s?):|photo(s?):|comment(s?):|key(s?):|group(s?):|profile(s?):|exp:|Arbiter\.info|code:|id:|\info\.com|interval:|time:|timer:|freq:|indent:|margin:|count:|navbar\.com|document\.com|expire(s?)\:|^fact\:|^slow\:|^fast\:|^default\:|^time(r?)\:|^(tr|div|td|form|img)\.com|^align:|widows:|^heidht:|color:|counter:|^name:|asp\.net|window\.net|window\.com|price:|news:|heeight:|timespan:|^spam:|^month:|^wait:|^deletion:|^radius:|date:|minh:|^built:|^gfnt:|^gimp:|^channel:|this\.options\.com|price:|row:|self\.info|div\.info|lbgc:|pageinfo:|ewtax:|number\:|column:|rows:|this\.com|:00|\d{1,3}\.000|\.0$|this\.|00\.0\.0\.0|00\.00\.00|\.0\.0\.0|0\.0\.0\.0|\.0\.0$|^252f|^2f|^3a|background:|show:|background\-attachment:|background\-color:|background\-image:|background\-position:|background\-repeat:|border:|border\-bottom:|border\-bottom\-color:|border\-bottom\-style:|border\-bottom\-width:|border\-color:|border\-left:|border\-left\-color:|ajax:|token:|border\-left\-style:|border\-left\-width:|border\-right:|border\-right\-color:|border\-right\-style:|border\-right\-width:|border\-style:|border\-top:|border\-top\-color:|border\-top\-style:|border\-top\-width:|border\-width:|outline:|outline\-color:|outline\-style:|outline\-width:|height:|max\-height:|max\-width:|min\-height:|min\-width:|width:|font:|font\-family:|font\-size:|font\-style:|font\-variant:|font\-weight:|content:|counter\-increment:|counter\-reset:|quotes:|list\-style:|list\-style\-image:|list\-style\-position:|list\-style\-type:|margin:|margin\-bottom:|margin\-left:|margin\-right:|margin\-top:|padding:|padding\-bottom:|padding\-left:|padding\-right:|padding\-top:|bottom:|number:|clear:|clip:|cursor:|display:|float:|left:|overflow:|position:|right:|top:|visibility:|z\-index:|orphans:|page\-break\-after:|page\-break\-before:|page\-break\-inside:|widows:|border\-collapse:|border\-spacing:|weight:|caption\-side:|empty\-cells:|length:|table\-layout:|color:|direction:|letter\-spacing:|line\-height:|text\-align:|text\-decoration:|text\-indent:|text\-shadow:|text\-transform:|unicode\-bidi:|vertical\-align:|white\-space:|word\-spacing|return:|botto:|^down:|^up:|slide:|categ:|fece05:|free:|front:|show:|full:|start:|free6:|mootools:|head:|popup:|sledzik:|gatrack:|base:|visiblerows:|speed:|zone:|blog:|diff:|aries:|taurus:|gemini:|cancer:|leo:|virgo:|aquarius:|capricorn:|sagittarius:|scorpio:|libra:|pisces:|duration:|ewtax:|c\.jp|image(s?):|videos(s?):|lock:|retry(s?):|maxsel:|widt:|screen:|shift:|thresh:|control:|meta:|enter:|pause:|millis:|a\.info|console\.info|movie(s?):|page(s?):|trove:|bullet:|logo:|comma:|delete:|escape:|home:|insert:|decimal:|divide:|page|hpad|vpad|multiply:|subtract:|period:|space:|sensitivity:|tolerance:|s\.com|e\.com)/mi
+            unless r =~ /(wdith:|wieght:|hieght:|heeight:|remove:|timespan:|rank:|position:|top:|mapentry:|left:|bottom:|right:|padding:|margin:|index:|size:|version:|ver:|w3\.org|www\.adobe\.com|download\.macromedia\.com|char|span\.|delay:|open:|close:|rate:|out:|post(s?):|photo(s?):|comment(s?):|key(s?):|group(s?):|profile(s?):|exp:|Arbiter\.info|code:|id:|\info\.com|interval:|time:|timer:|freq:|indent:|margin:|count:|navbar\.com|document\.com|expire(s?)\:|^fact\:|^slow\:|^fast\:|^default\:|^time(r?)\:|^(tr|div|td|form|img)\.com|^align:|widows:|^heidht:|color:|counter:|^name:|asp\.net|window\.net|window\.com|price:|news:|heeight:|timespan:|^spam:|^month:|^wait:|^deletion:|^radius:|date:|minh:|^built:|^gfnt:|^gimp:|^channel:|this\.options\.com|price:|row:|self\.info|div\.info|lbgc:|pageinfo:|ewtax:|number\:|column:|rows:|this\.com|:00|\d{1,3}\.000|\.0$|this\.|00\.0\.0\.0|00\.00\.00|\.0\.0\.0|0\.0\.0\.0|\.0\.0$|^252f|^2f|^3a|background:|show:|background\-attachment:|background\-color:|background\-image:|background\-position:|background\-repeat:|border:|border\-bottom:|border\-bottom\-color:|border\-bottom\-style:|border\-bottom\-width:|border\-color:|border\-left:|border\-left\-color:|ajax:|token:|border\-left\-style:|border\-left\-width:|border\-right:|border\-right\-color:|border\-right\-style:|border\-right\-width:|border\-style:|border\-top:|border\-top\-color:|border\-top\-style:|border\-top\-width:|border\-width:|outline:|outline\-color:|outline\-style:|outline\-width:|height:|max\-height:|max\-width:|min\-height:|min\-width:|width:|font:|font\-family:|font\-size:|font\-style:|font\-variant:|font\-weight:|content:|counter\-increment:|counter\-reset:|quotes:|list\-style:|list\-style\-image:|list\-style\-position:|list\-style\-type:|margin:|margin\-bottom:|margin\-left:|margin\-right:|margin\-top:|padding:|padding\-bottom:|padding\-left:|padding\-right:|padding\-top:|bottom:|number:|clear:|clip:|cursor:|display:|float:|left:|overflow:|position:|right:|top:|visibility:|z\-index:|orphans:|page\-break\-after:|page\-break\-before:|page\-break\-inside:|widows:|border\-collapse:|border\-spacing:|weight:|caption\-side:|empty\-cells:|length:|table\-layout:|color:|direction:|letter\-spacing:|line\-height:|text\-align:|text\-decoration:|text\-indent:|text\-shadow:|text\-transform:|unicode\-bidi:|vertical\-align:|white\-space:|word\-spacing|return:|botto:|^down:|^up:|slide:|categ:|fece05:|free:|front:|show:|full:|start:|free6:|mootools:|head:|popup:|sledzik:|gatrack:|base:|visiblerows:|speed:|zone:|blog:|diff:|aries:|taurus:|gemini:|cancer:|leo:|virgo:|aquarius:|capricorn:|sagittarius:|scorpio:|libra:|pisces:|duration:|ewtax:|c\.jp|image(s?):|videos(s?):|lock:|retry(s?):|maxsel:|widt:|screen:|shift:|thresh:|control:|meta:|enter:|pause:|millis:|a\.info|console\.info|movie(s?):|page(s?):|trove:|bullet:|logo:|comma:|delete:|escape:|home:|insert:|decimal:|divide:|page|hpad|vpad|multiply:|subtract:|period:|space:|sensitivity:|tolerance:|s\.com|e\.com|area:|steps:)/mi
                 if r =~ /\//
                   r = r[0,r.index('/')]
                   
